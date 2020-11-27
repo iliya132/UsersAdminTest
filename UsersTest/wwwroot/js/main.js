@@ -88,8 +88,6 @@ window.onload = function () {
     GetUsersAndRoles();
 }
 
-
-
 function GetUsersAndRoles() {
     connection.open('GET', 'https://localhost:44393/Users/allusers', true);
     connection.onreadystatechange = function () {
@@ -118,16 +116,16 @@ function GetRoles() {
 
 document.getElementById("AddBtn").onclick = function () {
     $("#AddModalWindow").modal('show');
+    let loginField = document.getElementById("AddmodalLoginField");
+    let nameField = document.getElementById("AddmodalNameField");
+    let emailField = document.getElementById("AddmodalEmailField");
+    let passwrdField = document.getElementById("AddmodalPswrdField");
+    let admCB = document.getElementById("AdminBox");
+    let usrCB = document.getElementById("UserBox");
     document.getElementById("ConfirmAdd").onclick = function () {
         if (!ValidateAddedUser()) {
             return;
         }
-        let loginField = document.getElementById("AddmodalLoginField");
-        let nameField = document.getElementById("AddmodalNameField");
-        let emailField = document.getElementById("AddmodalEmailField");
-        let passwrdField = document.getElementById("AddmodalPswrdField");
-        let admCB = document.getElementById("AdminBox");
-        let usrCB = document.getElementById("UserBox");
         let rls = [];
         if (admCB.checked) {
             rls.push(new Role("Admin"));
@@ -138,13 +136,14 @@ document.getElementById("AddBtn").onclick = function () {
             usrCB.checked = false;
         }
         let newUser = new User(loginField.value, nameField.value, emailField.value, passwrdField.value, rls);
-        loginField.value = '';
-        nameField.value = '';
-        emailField.value = '';
-        passwrdField.value = '';
         AddUser(newUser);
     }
     $("#AddModalWindow").modal('hide');
+    loginField.value = '';
+    nameField.value = '';
+    emailField.value = '';
+    passwrdField.value = '';
+    
 }
 
 function ValidateAddedUser() {
@@ -155,4 +154,5 @@ function ValidateAddedUser() {
     if (loginField.value.length < 1) {
         return false;
     }
+    return true;
 }
