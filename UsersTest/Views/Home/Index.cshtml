@@ -19,7 +19,7 @@
         <div class="container">
 
             <h1 class="mt-5">Пользователи</h1>
-            <button class="btn btn-success float-right mb-2" id="AddBtn">Добавить</button>
+            <button class="btn btn-success float-right mb-2" id="AddBtn">Add new</button>
             <table class="table">
                 <thead>
                     <tr>
@@ -40,7 +40,7 @@
         <div class="container"> <span class="text-muted">Тестовое задание Лебедева И.В.</span> </div>
     </footer>
 
-    <div class="modal fade" id="editModalWindow" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="editModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -57,7 +57,13 @@
                         </div>
                         <div class="form-group">
                             <label for="modalEmailField">Email</label>
-                            <input type="text" class="form-control" id="modalEmailField">
+                            <input type="email" class="form-control" id="modalEmailField">
+                        </div>
+                        <div class="form-group">
+                            <label for="modalLoginField">Admin</label>
+                            <input type="checkbox" class="form-control" id="EditAdminBox">
+                            <label for="modalLoginField">User</label>
+                            <input type="checkbox" class="form-control" id="EditUserBox">
                         </div>
                     </form>
                 </div>
@@ -65,6 +71,55 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal" id="ConfirmEdit">Save changes</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="AddModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddModalWindowTitle">Add user</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="AddmodalLoginField">Login</label>
+                            <input type="text" required pattern="[A-Za-z]" class="form-control" id="AddmodalLoginField">
+                        </div>
+                        <div class="form-group">
+                            <label for="AddmodalNameField">Имя</label>
+                            <input type="text" required class="form-control" id="AddmodalNameField">
+                        </div>
+                        <div class="form-group">
+                            <label for="AddmodalEmailField">Email</label>
+                            <input type="email" required class="form-control" id="AddmodalEmailField">
+                        </div>
+                        <div class="form-group">
+                            <label for="AddmodalPswrdField">Password</label>
+                            <input type="password" required class="form-control" id="AddmodalPswrdField">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="AdminBox">
+                                <label for="AdminBox" class="form-check-label">Admin</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="UserBox">
+                                <label for="UserBox" class="form-check-label">User</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="ConfirmAdd">Save changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

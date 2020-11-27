@@ -2,6 +2,30 @@
 
 let connection = new XMLHttpRequest();
 let users = [];
+let roles = [];
+
+class User {
+    constructor(login, name, email, password, roles) {
+        this.id = 'new';
+        this.login = login;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+}
+
+class Role {
+    constructor(name) {
+        this.id = 0;
+        this.name = name;
+    }
+}
+
+function AddUser(newUser) {
+    users.push(newUser);
+    Refresh();
+}
 
 function EditUser(user) {
     let nameField = document.getElementById('modalNameField');
@@ -60,19 +84,75 @@ function Refresh() {
         tableBody.appendChild(newRow);
     });
 }
-
-window.onload = function(){
-    connection.open('GET', 'https://localhost:44393/Users/allusers', true);
-    connection.onreadystatechange = function(){
-        if(connection.readyState == 4){
-            if(connection.status == 200){
-                users = JSON.parse(connection.responseText);
-                Refresh();
-        }
-    }
-    }
-    connection.send();
+window.onload = function () {
+    GetUsersAndRoles();
 }
 
 
 
+function GetUsersAndRoles() {
+    connection.open('GET', 'https://localhost:44393/Users/allusers', true);
+    connection.onreadystatechange = function () {
+        if (connection.readyState == 4) {
+            if (connection.status == 200) {
+                users = JSON.parse(connection.responseText);
+                roles = GetRoles();
+                Refresh();
+            }
+        }
+    }
+    connection.send();
+}
+
+function GetRoles() {
+    connection.open('GET', 'https://localhost:44393/Users/roles', true);
+    connection.onreadystatechange = function () {
+        if (connection.readyState == 4) {
+            if (connection.status == 200) {
+                return JSON.parse(connection.responseText);
+            }
+        }
+    }
+    connection.send();
+}
+
+document.getElementById("AddBtn").onclick = function () {
+    $("#AddModalWindow").modal('show');
+    document.getElementById("ConfirmAdd").onclick = function () {
+        if (!ValidateAddedUser()) {
+            return;
+        }
+        let loginField = document.getElementById("AddmodalLoginField");
+        let nameField = document.getElementById("AddmodalNameField");
+        let emailField = document.getElementById("AddmodalEmailField");
+        let passwrdField = document.getElementById("AddmodalPswrdField");
+        let admCB = document.getElementById("AdminBox");
+        let usrCB = document.getElementById("UserBox");
+        let rls = [];
+        if (admCB.checked) {
+            rls.push(new Role("Admin"));
+            admCB.checked = false;
+        }
+        if (usrCB.checked) {
+            rls.push(new Role("User"));
+            usrCB.checked = false;
+        }
+        let newUser = new User(loginField.value, nameField.value, emailField.value, passwrdField.value, rls);
+        loginField.value = '';
+        nameField.value = '';
+        emailField.value = '';
+        passwrdField.value = '';
+        AddUser(newUser);
+    }
+    $("#AddModalWindow").modal('hide');
+}
+
+function ValidateAddedUser() {
+    let loginField = document.getElementById("AddmodalLoginField");
+    let nameField = document.getElementById("AddmodalNameField");
+    let emailField = document.getElementById("AddmodalEmailField");
+    let passwrdField = document.getElementById("AddmodalPswrdField");
+    if (loginField.value.length < 1) {
+        return false;
+    }
+}
