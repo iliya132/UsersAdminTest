@@ -32,7 +32,7 @@ namespace UsersTest.Models.Implementations
                 Login = "testUser",
                 Name = "Peter",
                 Password = "qwerty",
-                Roles = AllRoles.Where(i=>i.Id == 0).ToList()
+                Roles = AllRoles.ToList()
             });
             AllUsers.Add(new User
             {
