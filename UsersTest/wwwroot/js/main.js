@@ -7,7 +7,7 @@ let roles = [];
 
 class User {
     constructor(login, name, email, password, roles) {
-        this.id = 'new';
+        this.id = 0;
         this.login = login;
         this.name = name;
         this.email = email;
@@ -25,6 +25,18 @@ class Role {
 
 function AddUser(newUser) {
     users.push(newUser);
+    let conn = new XMLHttpRequest();
+    conn.open('POST', apiUrl + 'adduser', true);
+    conn.setRequestHeader('Content-Type', 'application/json');
+    conn.onreadystatechange = function () {
+        if (conn.readyState == 4) {
+            if (conn.status == 200) {
+                newUser.id = conn.response;
+                Refresh();
+            }
+        }
+    }
+    conn.send(JSON.stringify(newUser));
     Refresh();
 }
 
@@ -136,6 +148,14 @@ function Refresh() {
 }
 window.onload = function () {
     GetUsersAndRoles();
+    let addform = document.getElementById('AddForm');
+    let editform = document.getElementById('editForm');
+    addform.addEventListener("submit", function (event) {
+        event.preventDefault();
+    });
+    editform.addEventListener("submit", function (event) {
+        event.preventDefault();
+    });
 }
 
 function GetUsersAndRoles() {
@@ -198,11 +218,15 @@ document.getElementById("AddBtn").onclick = function () {
 }
 
 function ValidateAddedUser() {
+    let editfrm = document.getElementById("editForm");
+    return !editfrm.checkValidity();
     let loginField = document.getElementById("AddmodalLoginField");
     let nameField = document.getElementById("AddmodalNameField");
     let emailField = document.getElementById("AddmodalEmailField");
     let passwrdField = document.getElementById("AddmodalPswrdField");
-    if (loginField.value.length < 1) {
+    if (loginField.value.length < 1 || nameField.value.length < 1 ||
+        emailField.value.length < 1 || passwrdField.value.length < 1) {
+
         return false;
     }
     return true;

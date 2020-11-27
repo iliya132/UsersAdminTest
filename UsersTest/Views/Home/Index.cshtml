@@ -49,8 +49,9 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form>
+                <form id="editForm">
+                    <div class="modal-body">
+
                         <div class="form-group">
                             <label for="modalNameField">Имя</label>
                             <input type="text" class="form-control" id="modalNameField">
@@ -69,12 +70,13 @@
                                 <label for="UserBox" class="form-check-label">User</label>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="ConfirmEdit">Save changes</button>
-                </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" data-dismiss="modal" id="ConfirmEdit">Save changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -121,7 +123,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="ConfirmAdd">Save changes</button>
+                        <button type="submit" class="btn btn-primary" id="ConfirmAdd">Save changes</button>
                     </div>
                 </form>
             </div>

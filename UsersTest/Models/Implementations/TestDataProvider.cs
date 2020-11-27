@@ -57,7 +57,7 @@ namespace UsersTest.Models.Implementations
 
         public int AddUser(User newUser)
         {
-            newUser.Id = AllUsers.Last().Id + 1;
+            newUser.Id = AllUsers.Count > 0 ? AllUsers.Last().Id + 1: 0;
             AllUsers.Add(newUser);
             return newUser.Id;
         }
