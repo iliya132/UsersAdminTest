@@ -60,10 +60,14 @@
                             <input type="email" class="form-control" id="modalEmailField">
                         </div>
                         <div class="form-group">
-                            <label for="modalLoginField">Admin</label>
-                            <input type="checkbox" class="form-control" id="EditAdminBox">
-                            <label for="modalLoginField">User</label>
-                            <input type="checkbox" class="form-control" id="EditUserBox">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="EditAdminBox">
+                                <label for="AdminBox" class="form-check-label">Admin</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="EditUserBox">
+                                <label for="UserBox" class="form-check-label">User</label>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -117,7 +121,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" id="ConfirmAdd">Save changes</button>
+                        <button type="button" class="btn btn-primary" id="ConfirmAdd">Save changes</button>
                     </div>
                 </form>
             </div>

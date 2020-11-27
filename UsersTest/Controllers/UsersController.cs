@@ -15,9 +15,9 @@ namespace UsersTest.Controllers
     public class UsersController : ControllerBase
     {
         IDataProvider _dbProvider;
-        public UsersController()
+        public UsersController(IDataProvider provider)
         {
-            _dbProvider = new TestDataProvider();
+            _dbProvider = provider;
         }
 
         [HttpGet]
@@ -33,6 +33,28 @@ namespace UsersTest.Controllers
         public IActionResult GetRoles()
         {
             return new JsonResult(_dbProvider.GetAllRoles());
+        }
+
+        [HttpPost]
+        [Route("adduser")]
+        public int AddUser(User newUser)
+        {
+            return _dbProvider.AddUser(newUser);
+        }
+
+        [HttpPut]
+        [Route("edituser")]
+        public bool EditUser(User newUser)
+        {
+           
+            return _dbProvider.EditUser(newUser);
+        }
+
+        [HttpDelete]
+        [Route("deleteuser")]
+        public bool DeleteUser(User newUser)
+        {
+            return _dbProvider.DeleteUser(newUser);
         }
     }
 }

@@ -54,5 +54,37 @@ namespace UsersTest.Models.Implementations
         {
             return AllUsers;
         }
+
+        public int AddUser(User newUser)
+        {
+            newUser.Id = AllUsers.Last().Id + 1;
+            AllUsers.Add(newUser);
+            return newUser.Id;
+        }
+
+        public bool EditUser(User editedUser)
+        {
+            User usr = AllUsers.FirstOrDefault(usr => usr.Id == editedUser.Id);
+            if(usr == null)
+            {
+                return false;
+            }
+            usr.Name = editedUser.Name;
+            usr.Password = editedUser.Password;
+            usr.Roles = editedUser.Roles;
+            usr.Email = editedUser.Email;
+            return true;
+        }
+
+        public bool DeleteUser(User deletedUser)
+        {
+            User tmp = AllUsers.FirstOrDefault(i => i.Id == deletedUser.Id);
+            if(tmp == null)
+            {
+                return false;
+            }
+            AllUsers.Remove(tmp);
+            return true;
+        }
     }
 }

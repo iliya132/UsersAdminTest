@@ -1,6 +1,7 @@
 "use strict";
 
 let connection = new XMLHttpRequest();
+let apiUrl = 'https://localhost:44393/Users/';
 let users = [];
 let roles = [];
 
@@ -30,13 +31,54 @@ function AddUser(newUser) {
 function EditUser(user) {
     let nameField = document.getElementById('modalNameField');
     let emailField = document.getElementById('modalEmailField');
+    let admCB = document.getElementById("EditAdminBox");
+    let usrCB = document.getElementById("EditUserBox");
     user.name = nameField.value;
     user.email = emailField.value;
+    user.roles.splice(0);
+    if (admCB.checked) {
+        user.roles.push(new Role("Admin"));
+        admCB.checked = false;
+    }
+    if (usrCB.checked) {
+        user.roles.push(new Role("User"));
+        usrCB.checked = false;
+    }
+    CommitEdit(user);
     Refresh();
+}
+
+function CommitEdit(user) {
+    let conn = new XMLHttpRequest();
+    conn.open('PUT', apiUrl + 'edituser', true);
+    conn.setRequestHeader('Content-Type', 'application/json');
+    conn.onreadystatechange = function () {
+        if (connection.readyState == 4) {
+            if (connection.status == 200) {
+                //TODO Здесь нужно бы было проверить ответ от сервера
+            }
+        }
+    }
+    conn.send(JSON.stringify(user));
+}
+
+function CommitDelete(user) {
+    let conn = new XMLHttpRequest();
+    conn.open('DELETE', apiUrl + 'deleteuser', true);
+    conn.setRequestHeader('Content-Type', 'application/json');
+    conn.onreadystatechange = function () {
+        if (connection.readyState == 4) {
+            if (connection.status == 200) {
+                //TODO Здесь нужно бы было проверить ответ от сервера
+            }
+        }
+    }
+    conn.send(JSON.stringify(user));
 }
 
 function DeleteUser(user) {
     users.splice(users.findIndex(v => v == user), 1);
+    CommitDelete(user);
     Refresh();
 }
 
@@ -61,6 +103,7 @@ function Refresh() {
         }).join(', ');
         CreateElement("th", roles, newRow);
         let editBtn = document.createElement("button");
+
         editBtn.setAttribute("class", "btn btn-secondary mr-2");
         editBtn.appendChild(document.createTextNode("Edit"));
         newRow.appendChild(editBtn);
@@ -69,7 +112,14 @@ function Refresh() {
             $("#editModalWindow").modal('show');
             document.getElementById('modalNameField').value = users[i].name;
             document.getElementById('modalEmailField').value = users[i].email;
-            ConfirmEdit.onclick = function () { EditUser(users[i]); }
+
+            document.getElementById('EditAdminBox').checked = users[i].roles.map(i=>i.name).some(nm=>nm == 'Admin');
+            document.getElementById('EditUserBox').checked = users[i].roles.map(i=>i.name).some(nm=>nm == 'User');
+            ConfirmEdit.onclick = function () {
+
+
+                EditUser(users[i]);
+            }
             $("#editModalWindow").modal('hide');
         }
         let deleteBtn = document.createElement("button");
@@ -89,7 +139,7 @@ window.onload = function () {
 }
 
 function GetUsersAndRoles() {
-    connection.open('GET', 'https://localhost:44393/Users/allusers', true);
+    connection.open('GET', apiUrl + 'allusers', true);
     connection.onreadystatechange = function () {
         if (connection.readyState == 4) {
             if (connection.status == 200) {
@@ -103,7 +153,7 @@ function GetUsersAndRoles() {
 }
 
 function GetRoles() {
-    connection.open('GET', 'https://localhost:44393/Users/roles', true);
+    connection.open('GET', apiUrl + 'roles', true);
     connection.onreadystatechange = function () {
         if (connection.readyState == 4) {
             if (connection.status == 200) {
@@ -137,8 +187,9 @@ document.getElementById("AddBtn").onclick = function () {
         }
         let newUser = new User(loginField.value, nameField.value, emailField.value, passwrdField.value, rls);
         AddUser(newUser);
+        $("#AddModalWindow").modal('hide');
     }
-    $("#AddModalWindow").modal('hide');
+    
     loginField.value = '';
     nameField.value = '';
     emailField.value = '';
