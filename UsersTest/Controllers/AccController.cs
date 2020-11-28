@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 using UsersTest.Auth;
+using UsersTest.Models.Entities.ViewModels;
 
 namespace UsersTest.Controllers
 {
@@ -17,10 +15,15 @@ namespace UsersTest.Controllers
     [ApiController]
     public class AccController : ControllerBase
     {
-        [HttpPost("/token")]
-        public IActionResult Token(string username, string password)
+
+
+        [HttpPost("token")]
+        public IActionResult Token(AccountViewModel vm)
         {
-            if(!(username.Equals("TestUser") && password.Equals("testPasswrd")))
+            //работа JWT исключительно демонстрационная. Пользователи приложений хранятся в БД, пароли лежат как хэши
+            // Здесь бы я обратился к методу в БД, проверяющему корректность пользовательских данных
+            if(vm.UserName == null || vm.Password == null || 
+                !(vm.UserName.Equals("TestUser") && vm.Password.Equals("testPasswrd")))
             {
                 return BadRequest();
             }
@@ -39,12 +42,12 @@ namespace UsersTest.Controllers
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             string encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            (string accessToken, string userName) response = (
-                accessToken: encodedJwt,
-                userName: username
-            );
-
-            return new JsonResult(response);
+            TokenVM tk = new TokenVM
+            {
+                UserName = vm.UserName,
+                Token = encodedJwt
+            };
+            return new JsonResult(tk);
         }
     }
 }

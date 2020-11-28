@@ -2,8 +2,10 @@
 
 let connection = new XMLHttpRequest();
 let apiUrl = 'https://localhost:44393/Users/';
+let tokenUrl = 'https://localhost:44393/jwt/token';
 let users = [];
 let roles = [];
+let Curtoken;
 
 class User {
     constructor(login, name, email, password, roles) {
@@ -28,6 +30,7 @@ function AddUser(newUser) {
     let conn = new XMLHttpRequest();
     conn.open('POST', apiUrl + 'adduser', true);
     conn.setRequestHeader('Content-Type', 'application/json');
+    conn.setRequestHeader("Authorization", "Bearer " + Curtoken);
     conn.onreadystatechange = function () {
         if (conn.readyState == 4) {
             if (conn.status == 200) {
@@ -69,6 +72,7 @@ function CommitEdit(user) {
     let conn = new XMLHttpRequest();
     conn.open('PUT', apiUrl + 'edituser', true);
     conn.setRequestHeader('Content-Type', 'application/json');
+    conn.setRequestHeader("Authorization", "Bearer " + Curtoken);
     conn.onreadystatechange = function () {
         if (connection.readyState == 4) {
             if (connection.status == 200) {
@@ -83,6 +87,7 @@ function CommitDelete(user) {
     let conn = new XMLHttpRequest();
     conn.open('DELETE', apiUrl + 'deleteuser', true);
     conn.setRequestHeader('Content-Type', 'application/json');
+    conn.setRequestHeader("Authorization", "Bearer " + Curtoken);
     conn.onreadystatechange = function () {
         if (connection.readyState == 4) {
             if (connection.status == 200) {
@@ -154,6 +159,7 @@ function Refresh() {
 }
 
 window.onload = function () {
+    GetToken();
     GetUsersAndRoles();
     let addform = document.getElementById('AddForm');
     let editform = document.getElementById('editForm');
@@ -165,8 +171,27 @@ window.onload = function () {
     });
 }
 
+function GetToken() {
+    let body = JSON.stringify({ username: "TestUser", password: "testPasswrd" });
+    connection.open('POST', tokenUrl, false);
+    connection.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    connection.onreadystatechange = function () {
+        if (connection.readyState == 4) {
+            if (connection.status == 200) {
+                let token = JSON.parse(connection.responseText);
+                alert(token);
+                Curtoken = token.token;
+                alert(Curtoken);
+                
+            }
+        }
+    }
+    connection.send(body);
+}
+
 function GetUsersAndRoles() {
     connection.open('GET', apiUrl + 'allusers', true);
+    connection.setRequestHeader("Authorization", "Bearer " + Curtoken);
     connection.onreadystatechange = function () {
         if (connection.readyState == 4) {
             if (connection.status == 200) {
@@ -181,6 +206,7 @@ function GetUsersAndRoles() {
 
 function GetRoles() {
     connection.open('GET', apiUrl + 'roles', true);
+    connection.setRequestHeader("Authorization", "Bearer " + Curtoken);
     connection.onreadystatechange = function () {
         if (connection.readyState == 4) {
             if (connection.status == 200) {

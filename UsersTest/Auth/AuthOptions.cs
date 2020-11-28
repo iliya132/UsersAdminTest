@@ -13,17 +13,21 @@ namespace UsersTest.Auth
     {
         public const string ISSUER = "TestIssuer"; // издатель токена
         public const string AUDIENCE = "UsersTest"; // потребитель токена
-        static string KEY;   // ключ для шифрации
-        const string key_path = "Key.txt";
-        public const int LIFETIME = 1; // время жизни токена - 1 минута
-        static AuthOptions()
+        static string KEY
         {
-
-            using (StreamReader reader = new StreamReader(key_path))
+            get
             {
-                KEY = reader.ReadToEnd();
+                string tmp;
+                using (StreamReader reader = new StreamReader(key_path))
+                {
+                    tmp = reader.ReadToEnd();
+                }
+                return tmp;
             }
         }
+        const string key_path = "Key.txt";
+        public const int LIFETIME = 1; // время жизни токена - 1 минута
+
 
         public static SymmetricSecurityKey GetSymmetricSecurityKey()
         {
