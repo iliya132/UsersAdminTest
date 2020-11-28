@@ -105,7 +105,7 @@ namespace UsersTest.Models.Implementations
             int newId;
 
             #region addUser
-            string sql = $"INSERT into Users (Login, name, Email, Password) values " +
+            string sql = "INSERT into Users (Login, name, Email, Password) values " +
                 $"('{newUser.Login}', '{newUser.Name}', '{newUser.Email}', '{GetHashString(newUser.Password)}');" +
                 "SELECT last_insert_rowid();";
             SQLiteCommand command = new SQLiteCommand(sql, _connection);
@@ -193,6 +193,10 @@ namespace UsersTest.Models.Implementations
             }
         }
 
+        /// <summary>
+        /// Получить всех пользователей включая роли
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<User> GetAllUsers()
         {
             try
@@ -210,9 +214,9 @@ namespace UsersTest.Models.Implementations
                         Login = (string)reader["Login"],
                         Email = (string)reader["Email"]
                     };
-                    sql = $@"select UserId, RoleId, Roles.Id, Roles.Name from UserRoles
-                            INNER JOIN Roles on RoleId = Roles.Id
-                            where UserId = {usr.Id}";
+                    sql = "select UserId, RoleId, Roles.Id, Roles.Name from UserRoles "+
+                           "INNER JOIN Roles on RoleId = Roles.Id "+
+                           $"where UserId = {usr.Id}";
                     SQLiteCommand getRolescommand = new SQLiteCommand(sql, _connection);
                     SQLiteDataReader rolesReader = getRolescommand.ExecuteReader();
                     while (rolesReader.Read())

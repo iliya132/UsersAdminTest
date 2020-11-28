@@ -1,17 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-using UsersTest.Models.Implementations;
-using UsersTest.Models.Interfaces;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using System.Collections.Generic;
 using UsersTest.Models.Entities;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using UsersTest.Models.Interfaces;
 
 namespace UsersTest.Controllers
 {
     [Route("Users")]
+    [Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -22,11 +18,9 @@ namespace UsersTest.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [Route("allUsers")]
         public IActionResult GetUsers()
         {
-            
             return new JsonResult(_dbProvider.GetAllUsers());
         }
 
@@ -48,7 +42,6 @@ namespace UsersTest.Controllers
         [Route("edituser")]
         public bool EditUser(User newUser)
         {
-           
             return _dbProvider.EditUser(newUser);
         }
 

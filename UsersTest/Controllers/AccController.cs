@@ -15,13 +15,11 @@ namespace UsersTest.Controllers
     [ApiController]
     public class AccController : ControllerBase
     {
-
-
         [HttpPost("token")]
         public IActionResult Token(AccountViewModel vm)
         {
-            //работа JWT исключительно демонстрационная. Пользователи приложений хранятся в БД, пароли лежат как хэши
-            // Здесь бы я обратился к методу в БД, проверяющему корректность пользовательских данных
+            //работа JWT исключительно демонстрационная.
+            // В текущей реализации пользователь один - хардкодный. В проме следовало бы работать с БД.
             if(vm.UserName == null || vm.Password == null || 
                 !(vm.UserName.Equals("TestUser") && vm.Password.Equals("testPasswrd")))
             {
@@ -42,12 +40,12 @@ namespace UsersTest.Controllers
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             string encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            TokenVM tk = new TokenVM
+            TokenVM tkn = new TokenVM
             {
                 UserName = vm.UserName,
                 Token = encodedJwt
             };
-            return new JsonResult(tk);
+            return new JsonResult(tkn);
         }
     }
 }

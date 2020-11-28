@@ -17,13 +17,12 @@
     </header>
     <main role="main" class="flex-shrink-0">
         <div class="container">
-
             <h1 class="mt-5">Пользователи</h1>
             <button class="btn btn-success float-right mb-2" id="AddBtn">Add new</button>
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col" style="width:  8.33%">#</th>
+                        <th scope="col" style="width: 8.33%">#</th>
                         <th scope="col">Login</th>
                         <th scope="col">Name</th>
                         <th scope="col">Email</th>
@@ -39,7 +38,7 @@
     <footer class="navbar fixed-bottom">
         <div class="container"> <span class="text-muted">Тестовое задание Лебедева И.В.</span> </div>
     </footer>
-
+    @*Модальное окно для редактирования пользователя*@
     <div class="modal fade" id="editModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -70,7 +69,6 @@
                                 <label for="UserBox" class="form-check-label">User</label>
                             </div>
                         </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -80,7 +78,7 @@
             </div>
         </div>
     </div>
-
+    @*Модальное окно для добавления пользователя*@
     <div class="modal fade" id="AddModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">

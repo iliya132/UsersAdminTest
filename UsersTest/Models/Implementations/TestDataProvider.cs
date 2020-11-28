@@ -8,6 +8,9 @@ using UsersTest.Models.Interfaces;
 
 namespace UsersTest.Models.Implementations
 {
+    /// <summary>
+    /// Реализация провайдера данных для тестовых целей. Данные хранятся в памяти в течении одной сессии
+    /// </summary>
     public class TestDataProvider : IDataProvider
     {
         private List<User> AllUsers = new List<User>();
