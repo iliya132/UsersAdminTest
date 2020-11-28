@@ -7,18 +7,27 @@ using UsersTest.Models.Entities;
 using UsersTest.Models.Interfaces;
 using System;
 using System.Security.Cryptography;
+using System.Linq;
 
 namespace UsersTest.Models.Implementations
 {
     public class SQLiteDataProvider : IDataProvider
     {
-        private SQLiteConnection _connection = new SQLiteConnection("DataSource=users.db");
+        private static SQLiteConnection _connection = new SQLiteConnection("DataSource=users.db");
+
+        /// <summary>
+        /// sqlite - однопоточная БД. Если будет подключено несколько сеансов она заблокируется. 
+        /// Поэтому соединение имеет тип статик и открывается единожды. (класс подключается как синглтон)
+        /// </summary>
         public SQLiteDataProvider()
         {
             _connection.Open();
             EnsureCreated();
         }
 
+        /// <summary>
+        /// Удостовериться что БД существует. Если БД нет - создаем
+        /// </summary>
         private void EnsureCreated()
         {
             SQLiteCommand command = new SQLiteCommand(
@@ -55,40 +64,38 @@ namespace UsersTest.Models.Implementations
             {
                 command = new SQLiteCommand(
                     @"INSERT into Roles (name) values ('Admin');
-                    INSERT into Roles(name) values('User');", _connection
-                    );
+                    INSERT into Roles(name) values('User');", _connection);
                 command.ExecuteNonQuery();
             }
         }
 
+        /// <summary>
+        /// Генератор хеша
+        /// </summary>
+        /// <param name="text">любая строка</param>
+        /// <returns>Хэш</returns>
         string GetHashString(string text)
         {
-            byte[] bytes = Encoding.Unicode.GetBytes(text);
-            MD5CryptoServiceProvider CSP = new MD5CryptoServiceProvider();
-            byte[] byteHash = CSP.ComputeHash(bytes);
-            string hash = string.Empty;
-            foreach (byte b in byteHash)
-            {
-                hash += string.Format("{0:x2}", b);
-            }
-            return hash;
+            MD5CryptoServiceProvider cryptoProvider = new MD5CryptoServiceProvider();
+            byte[] byteHash = cryptoProvider.ComputeHash(Encoding.Unicode.GetBytes(text));
+            return string.Join(string.Empty, byteHash.Select(i=>$"{i:x2}"));
         }
 
         public int AddUser(User newUser)
         {
-            long newId;
-            //Здесь нужна реализация защиты от SQL инъекций. Упускаю т.к. тестовое задание
+            int newId;
+            //Здесь нужна реализация защиты от SQL инъекций. Упускаю т.к. это тестовое задание
             string sql = $@"INSERT into Users (Login, name, Email, Password) values ('{newUser.Login}', '{newUser.Name}', '{newUser.Email}', '{GetHashString(newUser.Password)}');
                     SELECT last_insert_rowid();";
             SQLiteCommand command = new SQLiteCommand(sql, _connection);
-                newId = (long)command.ExecuteScalar();
+            newId = (int)(long)command.ExecuteScalar(); //сперва распаковываем object=>long затем преобразуем long=>int
             StringBuilder sb = new StringBuilder();
             foreach(Role role in newUser.Roles)
             {
                 sb.Append($"INSERT into UserRoles (UserId, RoleId) values ({newId}, {role.Id});");
             }
             new SQLiteCommand(sb.ToString(), _connection).ExecuteNonQuery();
-            return (int)newId;
+            return newId;
         }
 
         public bool DeleteUser(User deletedUser)
@@ -99,6 +106,11 @@ namespace UsersTest.Models.Implementations
             return true;
         }
 
+        /// <summary>
+        /// Редактирование пользователя
+        /// </summary>
+        /// <param name="editedUser">пользователь с новыми значениями</param>
+        /// <returns>true=операция завершена успешно. false=операция завершена с ошибкой</returns>
         public bool EditUser(User editedUser)
         {
             try
