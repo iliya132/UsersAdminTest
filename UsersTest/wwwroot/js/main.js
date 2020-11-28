@@ -19,8 +19,8 @@ class User {
 }
 
 class Role {
-    constructor(name) {
-        this.id = 0;
+    constructor(id, name) {
+        this.id = id;
         this.name = name;
     }
 }
@@ -55,11 +55,11 @@ function EditUser(user) {
     user.email = emailField.value;
     user.roles.splice(0);
     if (admCB.checked) {
-        user.roles.push(new Role("Admin"));
+        user.roles.push(new Role(1, "Admin"));
         admCB.checked = false;
     }
     if (usrCB.checked) {
-        user.roles.push(new Role("User"));
+        user.roles.push(new Role(2, "User"));
         usrCB.checked = false;
     }
     
@@ -229,11 +229,11 @@ document.getElementById("AddBtn").onclick = function () {
         }
         let rls = [];
         if (admCB.checked) {
-            rls.push(new Role("Admin"));
+            rls.push(new Role(1, "Admin"));
             admCB.checked = false;
         }
         if (usrCB.checked) {
-            rls.push(new Role("User"));
+            rls.push(new Role(2, "User"));
             usrCB.checked = false;
         }
         let newUser = new User(loginField.value, nameField.value, emailField.value, passwrdField.value, rls);

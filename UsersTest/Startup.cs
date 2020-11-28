@@ -31,7 +31,7 @@ namespace UsersTest
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddSingleton<IDataProvider, TestDataProvider>();
+            services.AddSingleton<IDataProvider, SQLiteDataProvider>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
