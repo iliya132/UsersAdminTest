@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="#">UsersTest</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+        </nav>
+    </header>
+    <main role="main" class="flex-shrink-0">
+        <div class="container">
+            <h1 class="mt-5">Пользователи</h1>
+            <button class="btn btn-success float-right mb-2" id="AddBtn">Add new</button>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 8.33%">#</th>
+                        <th scope="col">Login</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Roles</th>
+                        <th scope="col">Admin</th>
+                    </tr>
+                </thead>
+                <tbody id="UserRows">
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <footer class="navbar fixed-bottom">
+        <div class="container"> <span class="text-muted">Тестовое задание Лебедева И.В.</span> </div>
+    </footer>
+    @*Модальное окно для редактирования пользователя*@
+    <div class="modal fade" id="editModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalWindowTitle">Edit user</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editForm">
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="modalNameField">Имя</label>
+                            <input type="text" class="form-control" required minlength="1" id="modalNameField">
+                        </div>
+                        <div class="form-group">
+                            <label for="modalEmailField">Email</label>
+                            <input type="email" required class="form-control" id="modalEmailField">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="EditAdminBox">
+                                <label for="AdminBox" class="form-check-label">Admin</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="EditUserBox">
+                                <label for="UserBox" class="form-check-label">User</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="ConfirmEdit">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @*Модальное окно для добавления пользователя*@
+    <div class="modal fade" id="AddModalWindow" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddModalWindowTitle">Add user</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="AddForm">
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="AddmodalLoginField">Login</label>
+                            <input type="text" required class="form-control" id="AddmodalLoginField">
+                        </div>
+                        <div class="form-group">
+                            <label for="AddmodalNameField">Имя</label>
+                            <input type="text" required class="form-control" id="AddmodalNameField">
+                        </div>
+                        <div class="form-group">
+                            <label for="AddmodalEmailField">Email</label>
+                            <input type="email" required class="form-control" id="AddmodalEmailField">
+                        </div>
+                        <div class="form-group">
+                            <label for="AddmodalPswrdField">Password</label>
+                            <input type="password" required class="form-control" id="AddmodalPswrdField">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="AdminBox">
+                                <label for="AdminBox" class="form-check-label">Admin</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="UserBox">
+                                <label for="UserBox" class="form-check-label">User</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="ConfirmAdd">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/jquery.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script charset="utf-8" src="~/js/main.js"></script>
+</body>
+
+</html>
