@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Collections.Generic;
 using UsersTest.Models.Entities;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UsersTest.Controllers
 {
@@ -21,6 +22,7 @@ namespace UsersTest.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("allUsers")]
         public IActionResult GetUsers()
         {
