@@ -11,8 +11,8 @@ namespace UsersTest.Auth
 {
     public class AuthOptions
     {
-        public const string ISSUER = "TestIssuer"; // издатель токена
-        public const string AUDIENCE = "UsersTest"; // потребитель токена
+        public const string ISSUER = "TestIssuer";
+        public const string AUDIENCE = "UsersTest";
         static string KEY
         {
             get
@@ -26,8 +26,7 @@ namespace UsersTest.Auth
             }
         }
         const string key_path = "Key.txt";
-        public const int LIFETIME = 1; // время жизни токена - 1 минута
-
+        public const int LIFETIME = 10;
 
         public static SymmetricSecurityKey GetSymmetricSecurityKey()
         {

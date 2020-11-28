@@ -179,9 +179,7 @@ function GetToken() {
         if (connection.readyState == 4) {
             if (connection.status == 200) {
                 let token = JSON.parse(connection.responseText);
-                alert(token);
                 Curtoken = token.token;
-                alert(Curtoken);
                 
             }
         }
