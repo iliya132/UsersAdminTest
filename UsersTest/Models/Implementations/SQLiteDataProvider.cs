@@ -18,6 +18,7 @@ namespace UsersTest.Models.Implementations
         /// <summary>
         /// sqlite - однопоточная БД. Если будет подключено несколько сеансов она заблокируется. 
         /// Поэтому соединение имеет тип статик и открывается единожды. (класс подключается как синглтон)
+        /// При работе с полноценными БД целесообразно использование Scoped зависимости
         /// </summary>
         public SQLiteDataProvider()
         {
@@ -30,6 +31,7 @@ namespace UsersTest.Models.Implementations
         /// </summary>
         private void EnsureCreated()
         {
+            #region Table Users
             SQLiteCommand command = new SQLiteCommand(
                 @"CREATE TABLE IF NOT EXISTS 'Users' (
                 'Id'    INTEGER NOT NULL UNIQUE,
@@ -40,6 +42,9 @@ namespace UsersTest.Models.Implementations
                 PRIMARY KEY('Id' AUTOINCREMENT)
                 );", _connection);
             command.ExecuteNonQuery();
+            #endregion
+
+            #region Table Roles
             command = new SQLiteCommand(
                 @"CREATE TABLE IF NOT EXISTS 'Roles'(
                 'Id'    INTEGER NOT NULL UNIQUE,
@@ -47,6 +52,9 @@ namespace UsersTest.Models.Implementations
                 PRIMARY KEY('Id' AUTOINCREMENT)
                 );", _connection);
             command.ExecuteNonQuery();
+            #endregion
+
+            #region Table UserRoles
             command = new SQLiteCommand(
                 @"CREATE TABLE IF NOT EXISTS 'UserRoles' (
                 'Id'    INTEGER NOT NULL UNIQUE,
@@ -57,6 +65,9 @@ namespace UsersTest.Models.Implementations
                 FOREIGN KEY('UserId') REFERENCES 'Users'('Id')
                 );", _connection);
             command.ExecuteNonQuery();
+            #endregion
+
+            #region AddDefaultRoles
             command = new SQLiteCommand(
                 "select count(*) from Roles", _connection);
             int rolesCount = Convert.ToInt32(command.ExecuteScalar());
@@ -67,6 +78,7 @@ namespace UsersTest.Models.Implementations
                     INSERT into Roles(name) values('User');", _connection);
                 command.ExecuteNonQuery();
             }
+            #endregion
         }
 
         /// <summary>
@@ -81,28 +93,44 @@ namespace UsersTest.Models.Implementations
             return string.Join(string.Empty, byteHash.Select(i=>$"{i:x2}"));
         }
 
+        /// <summary>
+        /// Добавление нового пользователя в БД.
+        /// Текущая реализация - тестовая. (отсутствуют проверки)
+        /// Необходима валидация входящих данных + внедрение защиты от sql инъекций, т.к. тут я использую низкоуровневый доступ к бд.
+        /// </summary>
+        /// <param name="newUser"></param>
+        /// <returns></returns>
         public int AddUser(User newUser)
         {
             int newId;
-            //Здесь нужна реализация защиты от SQL инъекций. Упускаю т.к. это тестовое задание
-            string sql = $@"INSERT into Users (Login, name, Email, Password) values ('{newUser.Login}', '{newUser.Name}', '{newUser.Email}', '{GetHashString(newUser.Password)}');
-                    SELECT last_insert_rowid();";
+
+            #region addUser
+            string sql = $"INSERT into Users (Login, name, Email, Password) values " +
+                $"('{newUser.Login}', '{newUser.Name}', '{newUser.Email}', '{GetHashString(newUser.Password)}');" +
+                "SELECT last_insert_rowid();";
             SQLiteCommand command = new SQLiteCommand(sql, _connection);
             newId = (int)(long)command.ExecuteScalar(); //сперва распаковываем object=>long затем преобразуем long=>int
+            #endregion
+
+            #region add dependent roles
             StringBuilder sb = new StringBuilder();
             foreach(Role role in newUser.Roles)
             {
                 sb.Append($"INSERT into UserRoles (UserId, RoleId) values ({newId}, {role.Id});");
             }
             new SQLiteCommand(sb.ToString(), _connection).ExecuteNonQuery();
+            #endregion
+
             return newId;
         }
 
         public bool DeleteUser(User deletedUser)
         {
-            string sql = $"delete from Users where Users.Id = {deletedUser.Id}";
+            string sql = $"delete from Users where Users.Id = {deletedUser.Id}; select changes();";
             SQLiteCommand command = new SQLiteCommand(sql, _connection);
-            command.ExecuteNonQuery();
+            int rowsAffected = (int)(long)command.ExecuteScalar();
+            if (rowsAffected == 0)
+                return false;
             return true;
         }
 
