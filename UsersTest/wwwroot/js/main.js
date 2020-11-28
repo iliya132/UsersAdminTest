@@ -41,6 +41,9 @@ function AddUser(newUser) {
 }
 
 function EditUser(user) {
+    if (!ValidateEditedUser()) {
+        return false;
+    }
     let nameField = document.getElementById('modalNameField');
     let emailField = document.getElementById('modalEmailField');
     let admCB = document.getElementById("EditAdminBox");
@@ -56,8 +59,10 @@ function EditUser(user) {
         user.roles.push(new Role("User"));
         usrCB.checked = false;
     }
+    
     CommitEdit(user);
     Refresh();
+    return true;
 }
 
 function CommitEdit(user) {
@@ -128,11 +133,12 @@ function Refresh() {
             document.getElementById('EditAdminBox').checked = users[i].roles.map(i=>i.name).some(nm=>nm == 'Admin');
             document.getElementById('EditUserBox').checked = users[i].roles.map(i=>i.name).some(nm=>nm == 'User');
             ConfirmEdit.onclick = function () {
-
-
-                EditUser(users[i]);
+                if (EditUser(users[i])) {
+                    $("#editModalWindow").modal('hide');
+                }
+                
             }
-            $("#editModalWindow").modal('hide');
+            
         }
         let deleteBtn = document.createElement("button");
         deleteBtn.setAttribute("class", "btn btn-danger");
@@ -146,6 +152,7 @@ function Refresh() {
         tableBody.appendChild(newRow);
     });
 }
+
 window.onload = function () {
     GetUsersAndRoles();
     let addform = document.getElementById('AddForm');
@@ -217,17 +224,10 @@ document.getElementById("AddBtn").onclick = function () {
     
 }
 
-function ValidateAddedUser() {
-    let editfrm = document.getElementById("editForm");
-    return !editfrm.checkValidity();
-    let loginField = document.getElementById("AddmodalLoginField");
-    let nameField = document.getElementById("AddmodalNameField");
-    let emailField = document.getElementById("AddmodalEmailField");
-    let passwrdField = document.getElementById("AddmodalPswrdField");
-    if (loginField.value.length < 1 || nameField.value.length < 1 ||
-        emailField.value.length < 1 || passwrdField.value.length < 1) {
+function ValidateEditedUser() {
+    return document.getElementById("editForm").checkValidity();
+}
 
-        return false;
-    }
-    return true;
+function ValidateAddedUser() {
+    return document.getElementById("AddForm").checkValidity();
 }

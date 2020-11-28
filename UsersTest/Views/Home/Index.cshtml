@@ -54,11 +54,11 @@
 
                         <div class="form-group">
                             <label for="modalNameField">Имя</label>
-                            <input type="text" class="form-control" id="modalNameField">
+                            <input type="text" class="form-control" required minlength="1" id="modalNameField">
                         </div>
                         <div class="form-group">
                             <label for="modalEmailField">Email</label>
-                            <input type="email" class="form-control" id="modalEmailField">
+                            <input type="email" required class="form-control" id="modalEmailField">
                         </div>
                         <div class="form-group">
                             <div class="form-check">
@@ -74,7 +74,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" data-dismiss="modal" id="ConfirmEdit">Save changes</button>
+                        <button type="submit" class="btn btn-primary" id="ConfirmEdit">Save changes</button>
                     </div>
                 </form>
             </div>
