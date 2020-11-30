@@ -26,15 +26,15 @@ class Role {
 }
 
 window.onload = function () {
-    //в тестовой реализации токен запрашивается один раз. 
-    //В проме следует реализовать метод для направления запроса, 
-    //в котором бы производилась проверка на статус запроса и получение нового токена в случае необходимости
-    GetToken(); 
-    GetUsersAndRoles(); //загрузить первичные данные
+    //РІ С‚РµСЃС‚РѕРІРѕР№ СЂРµР°Р»РёР·Р°С†РёРё С‚РѕРєРµРЅ Р·Р°РїСЂР°С€РёРІР°РµС‚СЃСЏ РѕРґРёРЅ СЂР°Р·. 
+    //Р’ РїСЂРѕРјРµ СЃР»РµРґСѓРµС‚ СЂРµР°Р»РёР·РѕРІР°С‚СЊ РјРµС‚РѕРґ РґР»СЏ РЅР°РїСЂР°РІР»РµРЅРёСЏ Р·Р°РїСЂРѕСЃР°, 
+    //РІ РєРѕС‚РѕСЂРѕРј Р±С‹ РїСЂРѕРёР·РІРѕРґРёР»Р°СЃСЊ РїСЂРѕРІРµСЂРєР° РЅР° СЃС‚Р°С‚СѓСЃ Р·Р°РїСЂРѕСЃР° Рё РїРѕР»СѓС‡РµРЅРёРµ РЅРѕРІРѕРіРѕ С‚РѕРєРµРЅР° РІ СЃР»СѓС‡Р°Рµ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё
+    GetToken();
+    GetUsersAndRoles(); //Р·Р°РіСЂСѓР·РёС‚СЊ РїРµСЂРІРёС‡РЅС‹Рµ РґР°РЅРЅС‹Рµ
     let addform = document.getElementById('AddForm');
     let editform = document.getElementById('editForm');
-    //предотвратить перезагрузку и отправку формы при сабмите
-    addform.addEventListener("submit", function (event) { 
+    //РїСЂРµРґРѕС‚РІСЂР°С‚РёС‚СЊ РїРµСЂРµР·Р°РіСЂСѓР·РєСѓ Рё РѕС‚РїСЂР°РІРєСѓ С„РѕСЂРјС‹ РїСЂРё СЃР°Р±РјРёС‚Рµ
+    addform.addEventListener("submit", function (event) {
         event.preventDefault();
     });
     editform.addEventListener("submit", function (event) {
@@ -44,10 +44,10 @@ window.onload = function () {
     document.getElementById("ConfirmAdd").onclick = ConfirmAddButtonClick;
 }
 
-//Получить JWT token
+//РџРѕР»СѓС‡РёС‚СЊ JWT token
 function GetToken() {
-    // Тестовая реализация запроса токена. Пользовательские данные указаны хардкодно!
-    // Запрос выполняется синхронно что бы предотвратить дальнейшие запросы до получения токена
+    // РўРµСЃС‚РѕРІР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ Р·Р°РїСЂРѕСЃР° С‚РѕРєРµРЅР°. РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РґР°РЅРЅС‹Рµ СѓРєР°Р·Р°РЅС‹ С…Р°СЂРґРєРѕРґРЅРѕ!
+    // Р—Р°РїСЂРѕСЃ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ СЃРёРЅС…СЂРѕРЅРЅРѕ С‡С‚Рѕ Р±С‹ РїСЂРµРґРѕС‚РІСЂР°С‚РёС‚СЊ РґР°Р»СЊРЅРµР№С€РёРµ Р·Р°РїСЂРѕСЃС‹ РґРѕ РїРѕР»СѓС‡РµРЅРёСЏ С‚РѕРєРµРЅР°
     let body = JSON.stringify({ username: "TestUser", password: "testPasswrd" });
     connection.open('POST', tokenUrl, false);
     connection.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -62,7 +62,7 @@ function GetToken() {
     connection.send(body);
 }
 
-//Первичная загрузка пользователей и ролей
+//РџРµСЂРІРёС‡РЅР°СЏ Р·Р°РіСЂСѓР·РєР° РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ Рё СЂРѕР»РµР№
 function GetUsersAndRoles() {
     connection.open('GET', apiUrl + 'allusers', true);
     connection.setRequestHeader("Authorization", "Bearer " + ActiveToken);
@@ -78,7 +78,7 @@ function GetUsersAndRoles() {
     connection.send();
 }
 
-//Обновить представление
+//РћР±РЅРѕРІРёС‚СЊ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ
 function Refresh() {
     let tableBody = document.getElementById("UserRows");
     tableBody.innerHTML = '';
@@ -92,12 +92,12 @@ function Refresh() {
         CreateElement("th", roles, newRow);
         let editBtn = document.createElement("button");
         editBtn.setAttribute("class", "btn btn-secondary mr-2");
-        editBtn.appendChild(document.createTextNode("Edit"));
+        editBtn.appendChild(document.createTextNode("Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ"));
         newRow.appendChild(editBtn);
         editBtn.onclick = function () { EditButtonClick(i); };
         let deleteBtn = document.createElement("button");
         deleteBtn.setAttribute("class", "btn btn-danger");
-        deleteBtn.appendChild(document.createTextNode("Delete"));
+        deleteBtn.appendChild(document.createTextNode("РЈРґР°Р»РёС‚СЊ"));
         newRow.appendChild(deleteBtn);
         deleteBtn.onclick = function () {
             DeleteUser(users[i]);
@@ -106,7 +106,7 @@ function Refresh() {
     });
 }
 
-//Нажатие на кнопку "Редактировать"
+//РќР°Р¶Р°С‚РёРµ РЅР° РєРЅРѕРїРєСѓ "Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ"
 function EditButtonClick(id) {
     $("#editModalWindow").modal('show');
     document.getElementById('modalNameField').value = users[id].name;
@@ -120,7 +120,7 @@ function EditButtonClick(id) {
     }
 }
 
-//Добавление нового пользователя
+//Р”РѕР±Р°РІР»РµРЅРёРµ РЅРѕРІРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 function AddUser(newUser) {
     users.push(newUser);
     let conn = new XMLHttpRequest();
@@ -139,7 +139,7 @@ function AddUser(newUser) {
     Refresh();
 }
 
-//валидация отредактированного пользователя и изменение объекта в памяти
+//РІР°Р»РёРґР°С†РёСЏ РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Рё РёР·РјРµРЅРµРЅРёРµ РѕР±СЉРµРєС‚Р° РІ РїР°РјСЏС‚Рё
 function EditUser(user) {
     if (!ValidateEditedUser()) {
         return false;
@@ -165,14 +165,14 @@ function EditUser(user) {
     return true;
 }
 
-//Удаление объекта в памяти
+//РЈРґР°Р»РµРЅРёРµ РѕР±СЉРµРєС‚Р° РІ РїР°РјСЏС‚Рё
 function DeleteUser(user) {
     users.splice(users.findIndex(v => v == user), 1);
     CommitDelete(user);
     Refresh();
 }
 
-//Отправка изменений на сервер
+//РћС‚РїСЂР°РІРєР° РёР·РјРµРЅРµРЅРёР№ РЅР° СЃРµСЂРІРµСЂ
 function CommitEdit(user) {
     let conn = new XMLHttpRequest();
     conn.open('PUT', apiUrl + 'edituser', true);
@@ -181,14 +181,14 @@ function CommitEdit(user) {
     conn.onreadystatechange = function () {
         if (connection.readyState == 4) {
             if (connection.status == 200) {
-                //TODO Здесь нужно бы было проверить ответ от сервера
+                //TODO Р—РґРµСЃСЊ РЅСѓР¶РЅРѕ Р±С‹ Р±С‹Р»Рѕ РїСЂРѕРІРµСЂРёС‚СЊ РѕС‚РІРµС‚ РѕС‚ СЃРµСЂРІРµСЂР°
             }
         }
     }
     conn.send(JSON.stringify(user));
 }
 
-//Отправка изменений на сервер
+//РћС‚РїСЂР°РІРєР° РёР·РјРµРЅРµРЅРёР№ РЅР° СЃРµСЂРІРµСЂ
 function CommitDelete(user) {
     let conn = new XMLHttpRequest();
     conn.open('DELETE', apiUrl + 'deleteuser', true);
@@ -197,14 +197,14 @@ function CommitDelete(user) {
     conn.onreadystatechange = function () {
         if (connection.readyState == 4) {
             if (connection.status == 200) {
-                //TODO Здесь нужно бы было проверить ответ от сервера
+                //TODO Р—РґРµСЃСЊ РЅСѓР¶РЅРѕ Р±С‹ Р±С‹Р»Рѕ РїСЂРѕРІРµСЂРёС‚СЊ РѕС‚РІРµС‚ РѕС‚ СЃРµСЂРІРµСЂР°
             }
         }
     }
     conn.send(JSON.stringify(user));
 }
 
-//Создание нового html элемента с заданными параметрами
+//РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ html СЌР»РµРјРµРЅС‚Р° СЃ Р·Р°РґР°РЅРЅС‹РјРё РїР°СЂР°РјРµС‚СЂР°РјРё
 function CreateElement(type, innerHtml, owner) {
     let newElem = document.createElement(type);
     newElem.innerHTML = innerHtml;
@@ -212,7 +212,7 @@ function CreateElement(type, innerHtml, owner) {
     return newElem;
 }
 
-//запрос всех ролей с сервера
+//Р·Р°РїСЂРѕСЃ РІСЃРµС… СЂРѕР»РµР№ СЃ СЃРµСЂРІРµСЂР°
 function GetRoles() {
     connection.open('GET', apiUrl + 'roles', true);
     connection.setRequestHeader("Authorization", "Bearer " + ActiveToken);
@@ -226,7 +226,7 @@ function GetRoles() {
     connection.send();
 }
 
-//Нажатие на кнопку добавить
+//РќР°Р¶Р°С‚РёРµ РЅР° РєРЅРѕРїРєСѓ РґРѕР±Р°РІРёС‚СЊ
 function AddButtonClick() {
     $("#AddModalWindow").modal('show');
     let loginField = document.getElementById("AddmodalLoginField");
@@ -239,8 +239,8 @@ function AddButtonClick() {
     passwrdField.value = '';
 }
 
-//Нажатие на кнопку подтвердить добавление (валидация + создание объекта)
-function ConfirmAddButtonClick() {   
+//РќР°Р¶Р°С‚РёРµ РЅР° РєРЅРѕРїРєСѓ РїРѕРґС‚РІРµСЂРґРёС‚СЊ РґРѕР±Р°РІР»РµРЅРёРµ (РІР°Р»РёРґР°С†РёСЏ + СЃРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р°)
+function ConfirmAddButtonClick() {
     if (!ValidateAddedUser()) {
         return;
     }
